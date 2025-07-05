@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:simple_auth/auth/auth_client.dart';
 import 'package:simple_auth/pages/email_validate_page.dart';
+import 'package:simple_auth/pages/home_page.dart';
 import 'package:simple_auth/pages/login_page.dart';
 import 'package:simple_auth/pages/signup_page.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,42 +26,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int index = 0;
-  late List<Widget> pages;
-
-  void goToLogin() {
-    setState(() {
-      index = 0;
-    });
-  }
-
-  void goToSignup() {
-    setState(() {
-      index = 1;
-    });
-  }
-
-  void onTap(BuildContext context) {
-    Navigator.of(context).pushNamed('/email-validation');
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    pages = [
-      LoginPage(goToSignup: goToSignup, onTap: onTap),
-      SignupPage(goToLogin: goToLogin, onTap: onTap),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {'/email-validation': (context) => EmailValidatePage()},
-      home: pages[index],
+    return Provider(
+      create: (_) => AuthClient(baseUrl: "http://192.168.1.39:8080"),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/email-validation': (context) => EmailValidatePage(),
+          '/login': (context) => LoginPage(),
+          '/signup': (context) => SignupPage(),
+          '/home': (context) => HomePage(),
+        },
+        home: SignupPage(),
+      ),
     );
   }
 }

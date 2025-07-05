@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_auth/auth/auth_client.dart';
 import 'package:simple_auth/components/my_button.dart';
 import 'package:simple_auth/components/my_textfield.dart';
+import 'package:simple_auth/pages/home_page.dart';
 
 class EmailValidatePage extends StatefulWidget {
   const EmailValidatePage({super.key});
@@ -11,9 +14,11 @@ class EmailValidatePage extends StatefulWidget {
 
 class _EmailValidatePageState extends State<EmailValidatePage> {
   final TextEditingController codeController = TextEditingController();
+  bool? codeCorrect;
 
   @override
   Widget build(BuildContext context) {
+    final authClient = Provider.of<AuthClient>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -47,9 +52,39 @@ class _EmailValidatePageState extends State<EmailValidatePage> {
                   obsecureText: false,
                 ),
 
+                codeCorrect == false
+                    ? Text(
+                        "this code is incorrect.",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                        textAlign: TextAlign.center,
+                      )
+                    : Container(),
+
                 const SizedBox(height: 15),
 
-                MyButton(onTap: () {}, text: "Verify Email"),
+                MyButton(
+                  onTap: () async {
+                    final user = await authClient.getUser();
+                    final result = await authClient.verifyEmail(
+                      user.email,
+                      codeController.text,
+                    );
+                    if (result && mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (route) => false,
+                      );
+                      return;
+                    }
+                    if (mounted) {
+                      setState(() {
+                        codeCorrect = false;
+                      });
+                    }
+                  },
+                  text: "Verify Email",
+                ),
               ],
             ),
           ),
