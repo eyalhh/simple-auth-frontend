@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_auth/auth/auth_client.dart';
+import 'package:simple_auth/components/my_task.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,34 +9,42 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authClient = Provider.of<AuthClient>(context, listen: false);
-    final jwtFuture = authClient.getJwt();
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[300],
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: [
-            const Icon(Icons.lock_open, size: 150),
+            const SizedBox(height: 20),
+            Text(
+              "Your Tasks",
+              style: TextStyle(color: Colors.grey[700], fontSize: 28),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 30),
-            FutureBuilder(
-              future: authClient.getJwt(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Text(
-                      "your very secured jwt is ${snapshot.data!}",
-                      style: TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                return Container();
-              },
+            const MyTask(
+              name: "Call Mom",
+              description:
+                  "Take time to call Mom and check in on how she’s doing. Ask about her day, her health, and anything she might need help with. Share any personal updates, big or small — she’ll appreciate hearing from you. Even if there’s no special reason, just making the effort to stay connected strengthens the relationship and shows you care. Aim for a relaxed, unhurried conversation where she feels heard and appreciated.",
+              left: true,
+            ),
+            const MyTask(
+              name: "Call Mom",
+              description:
+                  "Take time to call Mom and check in on how she’s doing. Ask about her day, her health, and anything she might need help with. Share any personal updates, big or small — she’ll appreciate hearing from you. Even if there’s no special reason, just making the effort to stay connected strengthens the relationship and shows you care. Aim for a relaxed, unhurried conversation where she feels heard and appreciated.",
+              left: false,
+            ),
+            const MyTask(
+              name: "Call Mom",
+              description:
+                  "Take time to call Mom and check in on how she’s doing. Ask about her day, her health, and anything she might need help with. Share any personal updates, big or small — she’ll appreciate hearing from you. Even if there’s no special reason, just making the effort to stay connected strengthens the relationship and shows you care. Aim for a relaxed, unhurried conversation where she feels heard and appreciated.",
+              left: true,
+            ),
+            const MyTask(
+              name: "Call Mom",
+              description:
+                  "Take time to call Mom and check in on how she’s doing. Ask about her day, her health, and anything she might need help with. Share any personal updates, big or small — she’ll appreciate hearing from you. Even if there’s no special reason, just making the effort to stay connected strengthens the relationship and shows you care. Aim for a relaxed, unhurried conversation where she feels heard and appreciated.",
+              left: false,
             ),
           ],
         ),
